@@ -4,6 +4,7 @@ Project: Shoe Store Sales Tracker v4.0
 Developer: Calvin
 """
 
+from shoe_order import ShoeOrder
 import datetime
 
 # GLOBAL CONSTANTS (Store Rules)
@@ -56,12 +57,13 @@ def get_sale_details(default_size=DEFAULT_SIZE):
     else:
         price = float(price_input)
 
-    return {
-        "brand": brand,
-        "model": model,
-        "size": size,
-        "price": price
-    }
+    return ShoeOrder(
+        salesperson=None,
+        brand=brand,
+        model=model,
+        size=size,
+        price=price,
+    )
 
 
 def preview_sale(salesperson, sale_data):
@@ -69,9 +71,9 @@ def preview_sale(salesperson, sale_data):
     print("\n-----------------------------------")
     print("SALE PREVIEW:")
     print(f"Sales team members name: {salesperson}")
-    print(f"Shoe: {sale_data['brand']} {sale_data['model']}")
-    print(f"Size: {sale_data['size']}")
-    print(f"Price: ${sale_data['price']:.2f}")
+    print(f"Shoe: {sale_data.brand} {sale_data.model}")
+    print(f"Size: {sale_data.size}")
+    print(f"Price: ${sale_data.price:.2f}")
     print("-----------------------------------")
 
     confirm = input("Confirm sale? (y/n): ")
@@ -86,10 +88,10 @@ def record_sale(salesperson, sale_data):
     with open(SALES_HISTORY_FILE, "a") as file:
         file.write(f"\n[{current_time}] SALE RECORD\n")
         file.write(f"Salesperson: {salesperson}\n")
-
-        for key, value in sale_data.items():
-            file.write(f"{key.capitalize()}: {value}\n")
-
+        file.write(f"Brand: {sale_data.brand}\n")
+        file.write(f"Model: {sale_data.model}\n")
+        file.write(f"Size: {sale_data.size}\n")
+        file.write(f"Price: {sale_data.price}\n")
         file.write("-----------------------------\n")
 
     # 2. HUMAN REPORT FILE (WRITE MODE - overwrites each time)
@@ -98,9 +100,10 @@ def record_sale(salesperson, sale_data):
         file.write("        SHOE STORE RECEIPT\n")
         file.write("====================================\n")
         file.write(f"Salesperson: {salesperson.upper()}\n")
-
-        for key, value in sale_data.items():
-            file.write(f"{key.upper()}: {value}\n")
+        file.write(f"BRAND: {sale_data.brand.upper()}\n")
+        file.write(f"MODEL: {sale_data.model.upper()}\n")
+        file.write(f"SIZE: {sale_data.size}\n")
+        file.write(f"PRICE: ${sale_data.price:.2f}\n")
 
         file.write("------------------------------------\n")
         file.write(f"TIME: {current_time}\n")
@@ -116,10 +119,10 @@ def print_receipt(salesperson, sale_data):
     print("        SHOE STORE SALES RECEIPT")
     print("====================================")
     print(f"Sales team members name: {salesperson.upper()}")
-    print(f"BRAND: {sale_data['brand'].upper()}")
-    print(f"MODEL: {sale_data['model'].upper()}")
-    print(f"SIZE: {sale_data['size']}")
-    print(f"PRICE: ${sale_data['price']:.2f}")
+    print(f"BRAND: {sale_data.brand.upper()}")
+    print(f"MODEL: {sale_data.model.upper()}")
+    print(f"SIZE: {sale_data.size}")
+    print(f"PRICE: ${sale_data.price:.2f}")
     print("------------------------------------")
     print("STATUS: SALE RECORDED")
     print("====================================")
@@ -131,6 +134,8 @@ def main():
 
     # 2. Data Collection Phase
     sale_info = get_sale_details()
+    sale_info.salesperson = salesperson_name
+    sale_info.display_order()
 
     # 3. Preview Phase (KEYWORD ARGUMENTS)
     confirmed = preview_sale(

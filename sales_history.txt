@@ -1,0 +1,41 @@
+Calvin,Nike V5,10,180.0
+
+[2026-04-02 11:22:43] SALE RECORD
+Salesperson: Calvin
+Brand: nike
+Model: Vomero
+Size: 10
+Price: 180.0
+-----------------------------
+
+[2026-04-14 10:47:29] SALE RECORD
+Salesperson: Cal
+Brand: puma
+Model: zztop
+Size: 20
+Price: 1000.0
+-----------------------------
+
+[2026-04-16 11:46:06] SALE RECORD
+Salesperson: Cal
+Brand: NIKE
+Model: PEGUSUS
+Size: 10
+Price: 145.99
+-----------------------------
+
+[2026-04-16 11:46:57] SALE RECORD
+Salesperson: Nick
+Brand: BROOKS
+Model: GLYCERIN
+Size: 14
+Price: 165.0
+-----------------------------
+
+[2026-04-25 11:32:25] SALE RECORD
+Salesperson: Cal
+Brand: nikr
+Model: zztop
+Size: 67
+Price: 6767.0
+-----------------------------
