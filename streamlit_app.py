@@ -437,6 +437,8 @@ st.markdown("""
 INVENTORY_FILE = "inventory.txt"
 SALES_HISTORY_FILE = "sales_history.txt"
 RECEIPT_FILE = "receipt.txt"
+COMMISSIONS_FILE = "commissions.txt"
+COMMISSION_RATE = 0.035  # 3.5%
 DEFAULT_SIZE = 9
 DEFAULT_PRICE = 160.00
 BRANDS = ("Nike", "Adidas", "Puma", "New Balance", "Brooks")
@@ -546,6 +548,10 @@ def record_sale(salesperson, sale_data):
         file.write(f"Price: {sale_data.price}\n")
         file.write("-----------------------------\n")
     
+    # Record commission automatically
+    record_commission(salesperson, sale_data.brand, sale_data.model, sale_data.size, 
+                     sale_data.price, confirmation_number, current_time)
+    
     # Generate receipt file
     with open(RECEIPT_FILE, "w") as file:
         file.write("====================================\n")
@@ -599,6 +605,102 @@ def clear_form():
     st.session_state.sale_confirmation = None
 
 
+# ==================== COMMISSION TRACKING ====================
+def calculate_commission(price: float) -> float:
+    """Calculate 3.5% commission on sale price."""
+    return price * COMMISSION_RATE
+
+
+def record_commission(salesperson, brand, model, size, price, confirmation_number, timestamp):
+    """Record commission to commissions file."""
+    commission = calculate_commission(price)
+    with open(COMMISSIONS_FILE, "a") as file:
+        file.write(f"[{timestamp}] COMMISSION RECORD\n")
+        file.write(f"Confirmation: {confirmation_number}\n")
+        file.write(f"Salesperson: {salesperson}\n")
+        file.write(f"Brand: {brand}\n")
+        file.write(f"Model: {model}\n")
+        file.write(f"Size: {size}\n")
+        file.write(f"Sale Price: ${price:.2f}\n")
+        file.write(f"Commission (3.5%): ${commission:.2f}\n")
+        file.write("-----------------------------\n")
+    return commission
+
+
+def load_commissions():
+    """Load and parse commission history from file."""
+    if not os.path.exists(COMMISSIONS_FILE):
+        return []
+    
+    commissions = []
+    with open(COMMISSIONS_FILE, "r") as file:
+        content = file.read()
+        records = content.split("-----------------------------")
+        
+        for record in records:
+            if "Salesperson:" in record:
+                lines = record.strip().split("\n")
+                commission_dict = {}
+                for line in lines:
+                    if ": " in line:
+                        key, value = line.split(": ", 1)
+                        key = key.strip().replace("[", "").replace("]", "")
+                        value = value.strip()
+                        if key == "COMMISSION RECORD" or key == "":
+                            continue
+                        commission_dict[key] = value
+                
+                if commission_dict:
+                    commissions.append(commission_dict)
+    
+    return commissions
+
+
+def get_commissions_dataframe():
+    """Convert commission history to pandas DataFrame."""
+    commissions = load_commissions()
+    if not commissions:
+        return pd.DataFrame()
+    
+    df_data = []
+    for comm in commissions:
+        try:
+            # Extract timestamp from the record
+            sale_price = float(comm.get('Sale Price', '0').replace('$', ''))
+            commission_amt = float(comm.get('Commission (3.5%)', '0').replace('$', ''))
+            
+            df_data.append({
+                'Confirmation': comm.get('Confirmation', 'N/A'),
+                'Salesperson': comm.get('Salesperson', 'N/A'),
+                'Brand': comm.get('Brand', 'N/A'),
+                'Model': comm.get('Model', 'N/A'),
+                'Size': int(comm.get('Size', 0)),
+                'Sale Price': sale_price,
+                'Commission': commission_amt
+            })
+        except:
+            continue
+    
+    return pd.DataFrame(df_data)
+
+
+def export_commissions_to_csv():
+    """Export commission data to CSV."""
+    df = get_commissions_dataframe()
+    if df.empty:
+        return None
+    
+    # Create summary by salesperson
+    summary_df = df.groupby('Salesperson').agg({
+        'Commission': ['count', 'sum', 'mean'],
+        'Sale Price': 'sum'
+    }).round(2)
+    summary_df.columns = ['Sales Count', 'Total Commission', 'Avg Commission', 'Total Sales']
+    summary_df = summary_df.reset_index()
+    
+    return df, summary_df
+
+
 # ==================== MAIN HEADER ====================
 st.markdown('<div class="retro-header">🏃 RETRO SPORTS STORE 🏃<br>SHOE SALES TRACKER</div>', 
             unsafe_allow_html=True)
@@ -609,7 +711,7 @@ st.sidebar.markdown("---")
 st.sidebar.info("Use the tabs below to log sales, view history, and check analytics.", icon="📌")
 
 # CREATE TABS
-tab1, tab2, tab3 = st.tabs(["📝 NEW SALE", "📊 HISTORY", "📈 DASHBOARD"])
+tab1, tab2, tab3, tab4 = st.tabs(["📝 NEW SALE", "📊 HISTORY", "📈 DASHBOARD", "💰 COMMISSIONS"])
 
 # ==================== TAB 1: NEW SALE ====================
 with tab1:
@@ -923,6 +1025,33 @@ with tab3:
         
         st.markdown("---")
         
+        # COMMISSION ROW
+        comm_df = get_commissions_dataframe()
+        if not comm_df.empty:
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                total_commission = comm_df['Commission'].sum()
+                st.metric("💵 Total Commissions", f"${total_commission:.2f}")
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                avg_commission = comm_df['Commission'].mean()
+                st.metric("📊 Avg Commission", f"${avg_commission:.2f}")
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col3:
+                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                top_earner = comm_df.groupby('Salesperson')['Commission'].sum().idxmax()
+                top_amount = comm_df.groupby('Salesperson')['Commission'].sum().max()
+                st.metric("🏆 Top Earner", f"{top_earner.split()[0]}")
+                st.markdown(f"<small>${top_amount:.2f}</small>", unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown("---")
+        
         # CHARTS ROW
         col1, col2 = st.columns(2)
         
@@ -970,12 +1099,158 @@ with tab3:
         st.info("📭 No sales data yet. Record some sales to see dashboard analytics!", icon="ℹ️")
 
 
+# ==================== TAB 4: COMMISSIONS ====================
+with tab4:
+    st.markdown('<div class="retro-subheader">💰 COMMISSION TRACKER</div>', unsafe_allow_html=True)
+    st.markdown("Track 3.5% commission earned by each salesperson")
+    st.markdown("---")
+    
+    comm_df = get_commissions_dataframe()
+    
+    if not comm_df.empty:
+        # SUMMARY STATISTICS
+        st.markdown("### 📊 COMMISSION OVERVIEW")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("💵 Total Commissions", f"${comm_df['Commission'].sum():.2f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("📝 Total Sales", len(comm_df))
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("👥 Salespersons", comm_df['Salesperson'].nunique())
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("📈 Avg Commission", f"${comm_df['Commission'].mean():.2f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # COMMISSION BY SALESPERSON SUMMARY
+        st.markdown("### 🏆 COMMISSION BY SALESPERSON")
+        
+        salesperson_summary = comm_df.groupby('Salesperson').agg({
+            'Commission': ['count', 'sum', 'mean'],
+            'Sale Price': 'sum'
+        }).round(2)
+        salesperson_summary.columns = ['Sales Count', 'Total Commission', 'Avg Commission', 'Total Sales $']
+        salesperson_summary = salesperson_summary.sort_values('Total Commission', ascending=False)
+        
+        st.dataframe(salesperson_summary, use_container_width=True)
+        
+        # COMMISSION CHART
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Commission by Salesperson**")
+            comm_by_person = comm_df.groupby('Salesperson')['Commission'].sum().sort_values(ascending=False)
+            st.bar_chart(comm_by_person)
+        
+        with col2:
+            st.markdown("**Sales Count by Salesperson**")
+            sales_count = comm_df['Salesperson'].value_counts()
+            st.bar_chart(sales_count)
+        
+        st.markdown("---")
+        
+        # DETAILED BREAKDOWN
+        st.markdown("### 📋 DETAILED COMMISSION BREAKDOWN")
+        
+        # Filters
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            selected_salesperson = st.multiselect(
+                "Filter by Salesperson",
+                ["All"] + sorted(comm_df['Salesperson'].unique().tolist()),
+                default=["All"]
+            )
+        
+        with col2:
+            selected_brand = st.multiselect(
+                "Filter by Brand",
+                ["All"] + sorted(comm_df['Brand'].unique().tolist()),
+                default=["All"]
+            )
+        
+        with col3:
+            sort_by = st.selectbox(
+                "Sort by",
+                ["Most Recent", "Highest Commission", "Lowest Commission"]
+            )
+        
+        # Apply filters
+        filtered_comm_df = comm_df.copy()
+        
+        if "All" not in selected_salesperson:
+            filtered_comm_df = filtered_comm_df[filtered_comm_df['Salesperson'].isin(selected_salesperson)]
+        
+        if "All" not in selected_brand:
+            filtered_comm_df = filtered_comm_df[filtered_comm_df['Brand'].isin(selected_brand)]
+        
+        # Apply sorting
+        if sort_by == "Most Recent":
+            filtered_comm_df = filtered_comm_df.iloc[::-1]
+        elif sort_by == "Highest Commission":
+            filtered_comm_df = filtered_comm_df.sort_values('Commission', ascending=False)
+        elif sort_by == "Lowest Commission":
+            filtered_comm_df = filtered_comm_df.sort_values('Commission', ascending=True)
+        
+        # Display results
+        st.markdown("---")
+        st.markdown(f"### Results: {len(filtered_comm_df)} commission records")
+        
+        if not filtered_comm_df.empty:
+            display_comm_df = filtered_comm_df[['Confirmation', 'Salesperson', 'Brand', 'Model', 'Sale Price', 'Commission']].copy()
+            st.dataframe(display_comm_df, use_container_width=True, hide_index=True)
+            
+            # Export to CSV
+            st.markdown("---")
+            st.markdown("### 📥 EXPORT OPTIONS")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Detailed CSV
+                detailed_csv = display_comm_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Detailed CSV",
+                    data=detailed_csv,
+                    file_name=f"commissions_detailed_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            
+            with col2:
+                # Summary CSV
+                summary_csv = salesperson_summary.to_csv()
+                st.download_button(
+                    label="📥 Download Summary CSV",
+                    data=summary_csv,
+                    file_name=f"commissions_summary_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+        else:
+            st.warning("No commission records match your filters.")
+    
+    else:
+        st.info("📭 No commission data yet. Record some sales to earn commissions!", icon="ℹ️")
+
+
 # FOOTER
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #FF6B35; font-weight: bold; margin-top: 30px;">
     🏃 RETRO SPORTS STORE | Shoe Sales Tracker 🏃<br>
-    <small>Sprint 4 - Streamlit Edition (v2.0 - UX Refactored)</small><br>
-    <small style="color: #666;">WCAG 2.1 AAA Accessible | Enhanced UX | Real-time Validation</small>
+    <small>Sprint 4 - Streamlit Edition (v3.0 - With Commission Tracking)</small><br>
+    <small style="color: #666;">WCAG 2.1 AAA Accessible | 3.5% Commission Tracking | Real-time Analytics</small>
 </div>
 """, unsafe_allow_html=True)
