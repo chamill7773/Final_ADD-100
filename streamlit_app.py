@@ -124,8 +124,9 @@ st.markdown("""
     }
     
     .required-indicator {
-        color: #FF6B35;
+        color: #FF0000;
         font-weight: bold;
+        font-size: 1.1em;
     }
     
     /* Preview card - RESPONSIVE */
@@ -298,8 +299,10 @@ st.markdown("""
         }
         
         .required-indicator {
-            color: #FFB84D !important;
+            color: #FF0000 !important;
             font-weight: bold;
+            font-size: 1.2em;
+            text-shadow: 0 0 3px rgba(255, 0, 0, 0.8) !important;
         }
         
         /* Preview card for dark mode */
