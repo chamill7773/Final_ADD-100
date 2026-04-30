@@ -292,6 +292,12 @@ st.markdown("""
         .field-label {
             color: #ffffff !important;
             font-weight: bold;
+            font-size: 1.05em;
+            display: inline-block;
+        }
+        
+        .field-label span {
+            color: #ffffff !important;
         }
         
         .field-helper {
@@ -407,6 +413,15 @@ st.markdown("""
         }
         
         .stMarkdown span {
+            color: #ffffff !important;
+        }
+        
+        /* Ensure markdown text is bright */
+        .stMarkdown {
+            color: #ffffff !important;
+        }
+        
+        .stMarkdown * {
             color: #ffffff !important;
         }
         
