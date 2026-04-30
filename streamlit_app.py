@@ -365,9 +365,27 @@ st.markdown("""
             font-weight: bold;
         }
         
-        /* Markdown text elements for dark mode */
+        /* Universal text brightening for dark mode */
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff !important;
+        }
+        
+        p {
+            color: #e8e8e8 !important;
+        }
+        
+        strong, b {
+            color: #ffffff !important;
+        }
+        
+        /* Streamlit markdown and text elements */
         .stMarkdown p {
             color: #e8e8e8 !important;
+        }
+        
+        .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, 
+        .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+            color: #ffffff !important;
         }
         
         .stMarkdown strong {
@@ -378,9 +396,38 @@ st.markdown("""
             color: #d0d0d0 !important;
         }
         
+        /* Help text styling */
+        [data-testid="stHelperText"] {
+            color: #d0d0d0 !important;
+        }
+        
         /* Info/warning/success/error boxes */
         .stAlert {
             color: #f5f5f5 !important;
+        }
+        
+        .stInfo, .stWarning, .stSuccess, .stError {
+            color: #f5f5f5 !important;
+        }
+        
+        /* Streamlit native elements */
+        .stSubheader {
+            color: #ffffff !important;
+        }
+        
+        .stTitle {
+            color: #ffffff !important;
+        }
+        
+        /* Label text for inputs */
+        label {
+            color: #ffffff !important;
+        }
+        
+        /* Divider styling in dark mode */
+        hr {
+            border-color: #FF6B35 !important;
+            opacity: 0.7;
         }
     }
 </style>
