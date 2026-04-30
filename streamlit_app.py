@@ -21,7 +21,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# RETRO SPORTS STORE STYLING (IMPROVED FOR ACCESSIBILITY)
+# RETRO SPORTS STORE STYLING (IMPROVED FOR ACCESSIBILITY + DARK MODE)
 st.markdown("""
 <style>
     /* Retro Color Scheme - Orange, Yellow, Purple */
@@ -33,6 +33,7 @@ st.markdown("""
         --retro-light: #F5F5F5;
     }
     
+    /* ==================== LIGHT MODE (DEFAULT) ==================== */
     .main {
         background-color: #F5F5F5;
     }
@@ -95,6 +96,7 @@ st.markdown("""
         padding: 12px;
         font-weight: bold;
         font-size: 16px;
+        color: #1a1a1a;
     }
     
     /* Field group styling */
@@ -216,6 +218,7 @@ st.markdown("""
         padding: 15px;
         margin: 10px 0;
         font-family: 'Courier New', monospace;
+        color: #1a1a1a;
         background-image: linear-gradient(90deg, transparent 24%, #FFD700 25%, #FFD700 26%, transparent 27%, transparent 74%, #FFD700 75%, #FFD700 76%, transparent 77%, transparent),
                           linear-gradient(#FFD700 0px, #FFD700 2px, transparent 2px, transparent 4px);
         background-size: 50px 50px;
@@ -243,6 +246,114 @@ st.markdown("""
         overflow: hidden;
         clip: rect(0, 0, 0, 0);
         border: 0;
+    }
+    
+    /* ==================== DARK MODE ==================== */
+    @media (prefers-color-scheme: dark) {
+        .main {
+            background-color: #1e1e1e;
+        }
+        
+        /* Header stays same (gradient looks good in dark) */
+        .retro-header {
+            background: linear-gradient(135deg, #FF6B35 0%, #6A0DAD 100%);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        /* Tab styling for dark mode */
+        .stTabs [data-baseweb="tab-list"] button {
+            background-color: #FF6B35;
+            color: white;
+        }
+        
+        .stTabs [aria-selected="true"] {
+            background-color: #FFD700 !important;
+            color: #1a1a1a !important;
+        }
+        
+        /* Input fields for dark mode */
+        .stTextInput > div > div > input,
+        .stNumberInput > div > div > input,
+        .stSelectbox > div > div > select {
+            background-color: #2d2d2d;
+            border: 2px solid #FF6B35;
+            color: #e0e0e0;
+        }
+        
+        /* Field group for dark mode */
+        .field-group {
+            background-color: #2d2d2d;
+            border-left: 4px solid #FF6B35;
+            box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+        }
+        
+        .field-label {
+            color: #e0e0e0;
+        }
+        
+        .field-helper {
+            color: #b0b0b0;
+        }
+        
+        /* Preview card for dark mode */
+        .preview-card {
+            background-color: #2d2d2d;
+            border: 3px solid #FF6B35;
+            box-shadow: 5px 5px 0px rgba(106, 13, 173, 0.4);
+        }
+        
+        .preview-item {
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .preview-label {
+            color: #FFB84D;
+        }
+        
+        .preview-value {
+            color: #e0e0e0;
+        }
+        
+        /* Success message for dark mode */
+        .success-msg {
+            background: linear-gradient(135deg, #2d5a2d 0%, #3a6f3a 100%);
+            border-left: 5px solid #76EEC6;
+            color: #e0e0e0;
+        }
+        
+        /* Confirmation number for dark mode */
+        .confirmation-number {
+            background-color: #FFD700;
+            color: #1a1a1a;
+        }
+        
+        /* Metric card for dark mode */
+        .metric-card {
+            background: linear-gradient(135deg, #C84E22 0%, #D4A824 100%);
+            color: white;
+            border: 2px solid #A370A3;
+        }
+        
+        /* Receipt container for dark mode */
+        .receipt-container {
+            background-color: #2d2d2d;
+            border: 2px dashed #FF6B35;
+            color: #e0e0e0;
+            background-image: linear-gradient(90deg, transparent 24%, rgba(255, 215, 0, 0.2) 25%, rgba(255, 215, 0, 0.2) 26%, transparent 27%, transparent 74%, rgba(255, 215, 0, 0.2) 75%, rgba(255, 215, 0, 0.2) 76%, transparent 77%, transparent),
+                              linear-gradient(rgba(255, 215, 0, 0.1) 0px, rgba(255, 215, 0, 0.1) 2px, transparent 2px, transparent 4px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+        }
+        
+        /* Validation for dark mode */
+        .validation-ok {
+            color: #76EEC6;
+        }
+        
+        .validation-error {
+            color: #FF6B6B;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
