@@ -365,30 +365,45 @@ st.markdown("""
             font-weight: bold;
         }
         
-        /* Universal text brightening for dark mode */
-        h1, h2, h3, h4, h5, h6 {
+        /* AGGRESSIVE - Force all text to be bright white in dark mode */
+        body, html {
             color: #ffffff !important;
         }
         
-        p {
-            color: #e8e8e8 !important;
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff !important;
+            font-weight: bold !important;
+        }
+        
+        p, span, div, section {
+            color: #ffffff !important;
         }
         
         strong, b {
             color: #ffffff !important;
+            font-weight: bold !important;
         }
         
-        /* Streamlit markdown and text elements */
-        .stMarkdown p {
-            color: #e8e8e8 !important;
+        /* Streamlit markdown container */
+        .stMarkdown {
+            color: #ffffff !important;
         }
         
         .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, 
         .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
             color: #ffffff !important;
+            font-weight: bold !important;
         }
         
-        .stMarkdown strong {
+        .stMarkdown p {
+            color: #e8e8e8 !important;
+        }
+        
+        .stMarkdown strong, .stMarkdown b {
+            color: #ffffff !important;
+        }
+        
+        .stMarkdown span {
             color: #ffffff !important;
         }
         
@@ -401,8 +416,19 @@ st.markdown("""
             color: #d0d0d0 !important;
         }
         
+        /* Form labels */
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label {
+            color: #ffffff !important;
+        }
+        
         /* Info/warning/success/error boxes */
         .stAlert {
+            color: #f5f5f5 !important;
+        }
+        
+        .stAlert p, .stAlert span {
             color: #f5f5f5 !important;
         }
         
@@ -419,8 +445,26 @@ st.markdown("""
             color: #ffffff !important;
         }
         
-        /* Label text for inputs */
-        label {
+        /* Tabs */
+        .stTabs {
+            color: #ffffff !important;
+        }
+        
+        /* Metrics and text */
+        .stMetric label {
+            color: #ffffff !important;
+        }
+        
+        .stMetric * {
+            color: #ffffff !important;
+        }
+        
+        /* Sidebar */
+        .stSidebar {
+            color: #ffffff !important;
+        }
+        
+        .stSidebar * {
             color: #ffffff !important;
         }
         
