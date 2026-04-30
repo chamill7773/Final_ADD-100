@@ -800,7 +800,7 @@ with tab1:
     
     col1, col2 = st.columns([3, 1])
     with col1:
-        st.markdown('<span style="color: #ffffff; font-weight: bold; font-size: 1.05em;">Sales Team Member Name <span style="color: #FF0000; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 3px rgba(255,0,0,0.8);">*</span></span>', 
+        st.markdown('<span style="color: #FF6B35; font-weight: bold; font-size: 1.05em;">Sales Team Member Name <span style="color: #FF0000; font-weight: bold; font-size: 1.2em;">*</span></span>', 
                    unsafe_allow_html=True)
         salesperson = st.text_input(
             "Salesperson name",
@@ -824,7 +824,7 @@ with tab1:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<span style="color: #ffffff; font-weight: bold; font-size: 1.05em;">Shoe Brand <span style="color: #FF0000; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 3px rgba(255,0,0,0.8);">*</span></span>', 
+        st.markdown('<span style="color: #FF6B35; font-weight: bold; font-size: 1.05em;">Shoe Brand <span style="color: #FF0000; font-weight: bold; font-size: 1.2em;">*</span></span>', 
                    unsafe_allow_html=True)
         brand = st.selectbox(
             "Brand",
@@ -838,7 +838,7 @@ with tab1:
         st.caption(f"ℹ️  Help: Available models - {MODEL_EXAMPLES.get(brand, 'N/A')}")
     
     with col2:
-        st.markdown('<span style="color: #ffffff; font-weight: bold; font-size: 1.05em;">Shoe Size <span style="color: #FF0000; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 3px rgba(255,0,0,0.8);">*</span></span>', 
+        st.markdown('<span style="color: #FF6B35; font-weight: bold; font-size: 1.05em;">Shoe Size <span style="color: #FF0000; font-weight: bold; font-size: 1.2em;">*</span></span>', 
                    unsafe_allow_html=True)
         size = st.number_input(
             "Size",
@@ -855,7 +855,7 @@ with tab1:
     col3, col4 = st.columns(2)
     
     with col3:
-        st.markdown('<span style="color: #ffffff; font-weight: bold; font-size: 1.05em;">Shoe Model <span style="color: #FF0000; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 3px rgba(255,0,0,0.8);">*</span></span>', 
+        st.markdown('<span style="color: #FF6B35; font-weight: bold; font-size: 1.05em;">Shoe Model <span style="color: #FF0000; font-weight: bold; font-size: 1.2em;">*</span></span>', 
                    unsafe_allow_html=True)
         model = st.text_input(
             "Model",
@@ -869,7 +869,7 @@ with tab1:
         st.caption("ℹ️  Help: Model name or style (e.g., 'Air Force 1 Low Black')")
     
     with col4:
-        st.markdown('<span style="color: #ffffff; font-weight: bold; font-size: 1.05em;">Price <span style="color: #FF0000; font-weight: bold; font-size: 1.2em; text-shadow: 0 0 3px rgba(255,0,0,0.8);">*</span></span>', 
+        st.markdown('<span style="color: #FF6B35; font-weight: bold; font-size: 1.05em;">Price <span style="color: #FF0000; font-weight: bold; font-size: 1.2em;">*</span></span>', 
                    unsafe_allow_html=True)
         price = st.number_input(
             "Price",
