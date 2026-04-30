@@ -278,7 +278,7 @@ st.markdown("""
         .stSelectbox > div > div > select {
             background-color: #2d2d2d;
             border: 2px solid #FF6B35;
-            color: #e0e0e0;
+            color: #f5f5f5;
         }
         
         /* Field group for dark mode */
@@ -289,11 +289,17 @@ st.markdown("""
         }
         
         .field-label {
-            color: #e0e0e0;
+            color: #ffffff !important;
+            font-weight: bold;
         }
         
         .field-helper {
-            color: #b0b0b0;
+            color: #d0d0d0 !important;
+        }
+        
+        .required-indicator {
+            color: #FFB84D !important;
+            font-weight: bold;
         }
         
         /* Preview card for dark mode */
@@ -312,14 +318,15 @@ st.markdown("""
         }
         
         .preview-value {
-            color: #e0e0e0;
+            color: #f5f5f5;
+            font-weight: bold;
         }
         
         /* Success message for dark mode */
         .success-msg {
             background: linear-gradient(135deg, #2d5a2d 0%, #3a6f3a 100%);
             border-left: 5px solid #76EEC6;
-            color: #e0e0e0;
+            color: #f5f5f5;
         }
         
         /* Confirmation number for dark mode */
@@ -331,15 +338,16 @@ st.markdown("""
         /* Metric card for dark mode */
         .metric-card {
             background: linear-gradient(135deg, #C84E22 0%, #D4A824 100%);
-            color: white;
+            color: #ffffff;
             border: 2px solid #A370A3;
+            font-weight: bold;
         }
         
         /* Receipt container for dark mode */
         .receipt-container {
             background-color: #2d2d2d;
             border: 2px dashed #FF6B35;
-            color: #e0e0e0;
+            color: #f5f5f5;
             background-image: linear-gradient(90deg, transparent 24%, rgba(255, 215, 0, 0.2) 25%, rgba(255, 215, 0, 0.2) 26%, transparent 27%, transparent 74%, rgba(255, 215, 0, 0.2) 75%, rgba(255, 215, 0, 0.2) 76%, transparent 77%, transparent),
                               linear-gradient(rgba(255, 215, 0, 0.1) 0px, rgba(255, 215, 0, 0.1) 2px, transparent 2px, transparent 4px);
             background-size: 50px 50px;
@@ -349,10 +357,30 @@ st.markdown("""
         /* Validation for dark mode */
         .validation-ok {
             color: #76EEC6;
+            font-weight: bold;
         }
         
         .validation-error {
             color: #FF6B6B;
+            font-weight: bold;
+        }
+        
+        /* Markdown text elements for dark mode */
+        .stMarkdown p {
+            color: #e8e8e8 !important;
+        }
+        
+        .stMarkdown strong {
+            color: #ffffff !important;
+        }
+        
+        .stCaption {
+            color: #d0d0d0 !important;
+        }
+        
+        /* Info/warning/success/error boxes */
+        .stAlert {
+            color: #f5f5f5 !important;
         }
     }
 </style>
