@@ -170,6 +170,27 @@ st.markdown("""
         font-size: 14px;
     }
     
+    /* Animation for success message */
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(34, 139, 34, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 10px rgba(34, 139, 34, 0);
+        }
+    }
+    
     .success-msg {
         background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
         border-left: 5px solid #228B22;
@@ -178,6 +199,8 @@ st.markdown("""
         font-weight: bold;
         color: #1a1a1a;
         margin: 15px 0;
+        animation: slideInDown 0.5s ease-out, pulse 2s infinite;
+        box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
     }
     
     .confirmation-number {
@@ -336,6 +359,8 @@ st.markdown("""
             background: linear-gradient(135deg, #2d5a2d 0%, #3a6f3a 100%);
             border-left: 5px solid #76EEC6;
             color: #f5f5f5;
+            animation: slideInDown 0.5s ease-out, pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(118, 238, 198, 0.3);
         }
         
         /* Confirmation number for dark mode */
@@ -792,6 +817,11 @@ with tab1:
             <strong>Amount:</strong> ${st.session_state.sale_confirmation['price']:.2f}
         </div>
         """, unsafe_allow_html=True)
+        
+        # Dismiss button
+        if st.button("✕ Dismiss Success Message", use_container_width=True, type="secondary"):
+            st.session_state.sale_confirmation = None
+            st.rerun()
         
         st.balloons()
     
